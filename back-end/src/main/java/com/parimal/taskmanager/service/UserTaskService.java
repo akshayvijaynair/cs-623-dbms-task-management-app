@@ -6,6 +6,9 @@ import com.parimal.taskmanager.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 
 import java.time.LocalDateTime;
@@ -20,6 +23,12 @@ public class UserTaskService {
     @Autowired private TaskPriorityRepository priorityRepo;
     @Autowired private TaskStatusRepository statusRepo;
     @Autowired private TaskTypeRepository typeRepo;
+    @Autowired private TaskHistoryRepository taskHistoryRepo;
+
+    public String getAuthenticatedUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : "system";
+    }
 
     public UserTask createTask(UserTask task, Long assigneeId, Long priorityId, Long statusId, Long typeId) {
         User assignee = userRepo.findById(assigneeId)
@@ -47,7 +56,24 @@ public class UserTaskService {
         UserTask task = userTaskRepo.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        task.setTitle(request.getTitle());
+        String oldTitle = task.getTitle();
+        String newTitle = request.getTitle();
+
+        // Only log history if changed
+        if (newTitle != null && !newTitle.equals(oldTitle)) {
+            TaskHistory history = new TaskHistory();
+            history.setTask(task);
+            history.setFieldChanged("title");
+            history.setOldValue(oldTitle);
+            history.setNewValue(newTitle);
+            history.setChangedAt(LocalDateTime.now());
+            history.setChangedBy(task.getAssignee()); // Optional: replace with authenticated user if available
+
+            taskHistoryRepo.save(history);
+            task.setTitle(newTitle); // update only after saving history
+        }
+
+        // Continue updating other fields
         task.setValue(request.getValue());
         task.setDueDate(request.getDueDate());
 
@@ -77,6 +103,7 @@ public class UserTaskService {
 
         return userTaskRepo.save(task);
     }
+
 
     public void deleteTask(Long taskId) {
         if (!userTaskRepo.existsById(taskId)) {

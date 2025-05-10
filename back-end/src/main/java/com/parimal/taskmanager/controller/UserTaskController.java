@@ -1,8 +1,10 @@
 package com.parimal.taskmanager.controller;
 
 import com.parimal.taskmanager.DTO.UpdateTaskRequest;
+import com.parimal.taskmanager.model.TaskHistory;
 import com.parimal.taskmanager.model.TaskRequest;
 import com.parimal.taskmanager.model.UserTask;
+import com.parimal.taskmanager.repository.TaskHistoryRepository;
 import com.parimal.taskmanager.service.UserTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,8 +69,18 @@ public class UserTaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @RestController
+    @RequestMapping("/api/history")
+    public class TaskHistoryController {
 
+        @Autowired
+        private TaskHistoryRepository historyRepo;
 
-
+        @GetMapping("/task/{taskId}")
+        public ResponseEntity<List<TaskHistory>> getTaskHistory(@PathVariable Long taskId) {
+            List<TaskHistory> history = historyRepo.findByTaskId(taskId);
+            return ResponseEntity.ok(history);
+        }
+    }
 
 }
