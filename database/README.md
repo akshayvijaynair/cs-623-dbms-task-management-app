@@ -2,7 +2,7 @@
 
 ```mermaid
 erDiagram
-  users {
+  "user.users" {
     INT id PK
     TEXT name
     TEXT email
@@ -10,7 +10,7 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  user_tasks {
+  "task.user_tasks" {
     INT id PK
     INT user_id FK
     TEXT title
@@ -25,25 +25,58 @@ erDiagram
     TIMESTAMP updated_at
   }
 
-  user_task_histories {
+  "task.user_task_histories" {
     INT id PK
     INT user_id FK
     INT user_task_history FK
     TEXT change
     TIMESTAMP created_at
+    TIMESTAMP updated_at
   }
 
-  user_task_comments {
+  "task.user_task_comments" {
     INT id PK
     INT note_id FK
     INT user_id FK
     TEXT comment
     TIMESTAMP created_at
+    TIMESTAMP updated_at
   }
 
-  users ||--o{ user_tasks : creates
-  users ||--o{ user_tasks : assigned
-  users ||--o{ user_tasks : locks
-  user_tasks ||--o{ user_task_histories : has
-  user_tasks ||--o{ user_task_comments : has
+  "user.users" ||--o{ "task.user_tasks" : creates
+  "user.users" ||--o{ "task.user_tasks" : assigned
+  "user.users" ||--o{ "task.user_tasks" : locks
+  "task.user_tasks" ||--o{ "task.user_task_histories" : has
+  "task.user_tasks" ||--o{ "task.user_task_comments" : has
 ```
+
+
+## Setup on postgreSQL
+
+Prerequisites:
+•	You must have pgAdmin installed and connected to your PostgreSQL server.
+•	You should have appropriate permissions on the database you’re modifying.
+
+Steps to Run the Script in pgAdmin:
+
+1. Open pgAdmin and connect to your database
+   - Launch pgAdmin.
+   - Connect to your server.
+   - Expand the tree view on the left: Servers > [Your Server] > Databases > [Your Database].
+
+2. Open a Query Tool
+   - Right-click on the target database (e.g., myapp_db) in the tree view.
+   - Select Query Tool from the context menu.
+
+3. Paste the SQL script
+   - In the SQL editor that opens, paste the entire script (from the BEGIN; to COMMIT; block).
+   - Make sure all of it is copied in one go.
+
+4. Execute the Script
+   - Click the Execute/Run button (lightning bolt icon), or press F5.
+   - The message pane below should show Query returned successfully if all goes well.
+
+5. Confirm Changes
+   - Refresh your Tables list by right-clicking Tables > Refresh to verify new tables were created.
+   - Optionally: Go to Views to see locked_tasks_view.
+   - You can also expand Functions and Triggers to verify that set_updated_at and all triggers are present.
