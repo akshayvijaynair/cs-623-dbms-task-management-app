@@ -4,6 +4,7 @@ import com.parimal.taskmanager.DTO.UpdateTaskRequest;
 import com.parimal.taskmanager.model.*;
 import com.parimal.taskmanager.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -83,6 +84,12 @@ public class UserTaskService {
         }
         userTaskRepo.deleteById(taskId);
     }
+
+    public List<UserTask> filterAndSortTasks(Long userId, Long statusId, Long priorityId, Long typeId, String sortBy, String sortDir) {
+        return userTaskRepo.findByFilters(userId, statusId, priorityId, typeId, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+    }
+
+
 
 
 }

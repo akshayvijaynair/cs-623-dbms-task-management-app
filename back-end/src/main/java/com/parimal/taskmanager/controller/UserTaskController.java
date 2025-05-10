@@ -54,6 +54,20 @@ public class UserTaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/users/{userId}/tasks/filter")
+    public ResponseEntity<List<UserTask>> filterTasks(
+            @PathVariable Long userId,
+            @RequestParam(required = false) Long statusId,
+            @RequestParam(required = false) Long priorityId,
+            @RequestParam(required = false) Long typeId,
+            @RequestParam(defaultValue = "dueDate") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        List<UserTask> tasks = taskService.filterAndSortTasks(userId, statusId, priorityId, typeId, sortBy, sortDir);
+        return ResponseEntity.ok(tasks);
+    }
+
+
 
 
 
