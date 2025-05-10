@@ -2,41 +2,38 @@ package com.parimal.taskmanager.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"") // <-- Quotes the table name to avoid SQL syntax errors
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
     private String email;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserTask> createdTasks;
+    // Getters and setters...
 
-    @OneToMany(mappedBy = "assignee")
-    private List<UserTask> assignedTasks;
+    public User() {}
 
-    @OneToMany(mappedBy = "lockedBy")
-    private List<UserTask> lockedTasks;
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
-    // Getters and Setters 👇
+    // --- Getters and Setters ---
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -69,29 +66,5 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public List<UserTask> getCreatedTasks() {
-        return createdTasks;
-    }
-
-    public void setCreatedTasks(List<UserTask> createdTasks) {
-        this.createdTasks = createdTasks;
-    }
-
-    public List<UserTask> getAssignedTasks() {
-        return assignedTasks;
-    }
-
-    public void setAssignedTasks(List<UserTask> assignedTasks) {
-        this.assignedTasks = assignedTasks;
-    }
-
-    public List<UserTask> getLockedTasks() {
-        return lockedTasks;
-    }
-
-    public void setLockedTasks(List<UserTask> lockedTasks) {
-        this.lockedTasks = lockedTasks;
     }
 }

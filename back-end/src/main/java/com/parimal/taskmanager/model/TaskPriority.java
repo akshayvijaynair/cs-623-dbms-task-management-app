@@ -9,8 +9,20 @@ public class TaskPriority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "priority_level")
-    private String priorityLevel;
+    private String level;
 
-    // Getters and setters
+    // Constructors
+    public TaskPriority() {}
+    public TaskPriority(String level) {
+        this.level = level;
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getLevel() { return level; }
+    public void setLevel(String level) { this.level = level; }
 }
+
+
