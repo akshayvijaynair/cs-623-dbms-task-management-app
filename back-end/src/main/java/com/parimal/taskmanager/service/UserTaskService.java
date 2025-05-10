@@ -35,4 +35,9 @@ public class UserTaskService {
 
         return userTaskRepo.save(task);
     }
+
+    public List<UserTask> getTasksByUserId(Long userId) {
+        return userTaskRepo.findByAssigneeId(userId);
+    }
+
 }

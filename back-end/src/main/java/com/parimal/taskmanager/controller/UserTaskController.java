@@ -29,4 +29,11 @@ public class UserTaskController {
                 request.getTypeId());
         return ResponseEntity.ok(created);
     }
+
+    @GetMapping("/users/{userId}/tasks")
+    public ResponseEntity<List<UserTask>> getUserTasks(@PathVariable Long userId) {
+        List<UserTask> tasks = taskService.getTasksByUserId(userId);
+        return ResponseEntity.ok(tasks);
+    }
+
 }
