@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: Task Management API
+  description: API for managing users, tasks, comments, and task histories
+  version: 1.0.0
+
+servers:
+  - url: https://api.yourdomain.com/v1
+    description: Production
+
+tags:
+  - name: Users
+  - name: Tasks
+  - name: Comments
+  - name: Histories
+
+paths:
+  /users:
+    get:
+      tags: [Users]
+      summary: List all users
+      responses:
+        200:
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /tasks:
+    post:
+      tags: [Tasks]
+      summary: Create a new task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTask'
+      responses:
+        201:
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+    get:
+      tags: [Tasks]
+      summary: List all tasks
+      responses:
+        200:
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+  /tasks/{taskId}/lock:
+    post:
+      tags: [Tasks]
+      summary: Lock a task for editing
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Task locked
+
+  /tasks/{taskId}/unlock:
+    post:
+      tags: [Tasks]
+      summary: Unlock a task
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Task unlocked
+
+  /tasks/{taskId}/comments:
+    post:
+      tags: [Comments]
+      summary: Add a comment to a task
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComment'
+      responses:
+        201:
+          description: Comment created
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+
+    Task:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        value: { type: string }
+        type: { type: string, enum: [TASK, NOTES, QUERY, BLOCKER] }
+        status: { type: string, enum: [OPEN, TODO, WIP, REVIEW, DONE, CLOSED] }
+        priority: { type: string, enum: [LOW, MEDIUM, HIGH, URGENT] }
+        due_date: { type: string, format: date-time }
+        locked_by_id: { type: integer }
+        assignee_id: { type: integer }
+
+    CreateTask:
+      allOf:
+        - $ref: '#/components/schemas/Task'
+      required: [title, type]
+
+    CreateComment:
+      type: object
+      properties:
+        user_id: { type: integer }
+        comment: { type: string }
+      required: [user_id, comment]
