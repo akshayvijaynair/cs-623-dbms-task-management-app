@@ -1,11 +1,14 @@
 package com.parimal.taskmanager.controller;
 
+import com.parimal.taskmanager.DTO.UpdateTaskRequest;
 import com.parimal.taskmanager.model.TaskRequest;
 import com.parimal.taskmanager.model.UserTask;
 import com.parimal.taskmanager.service.UserTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.parimal.taskmanager.DTO.UpdateTaskRequest;
+
 
 import java.util.List;
 
@@ -35,5 +38,16 @@ public class UserTaskController {
         List<UserTask> tasks = taskService.getTasksByUserId(userId);
         return ResponseEntity.ok(tasks);
     }
+
+    @PutMapping("/{taskId}")
+    public ResponseEntity<UserTask> updateTask(
+            @PathVariable Long taskId,
+            @RequestBody UpdateTaskRequest request
+    ) {
+        UserTask updatedTask = taskService.updateTask(taskId, request);
+        return ResponseEntity.ok(updatedTask);
+    }
+
+
 
 }
