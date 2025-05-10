@@ -77,4 +77,12 @@ public class UserTaskService {
         return userTaskRepo.save(task);
     }
 
+    public void deleteTask(Long taskId) {
+        if (!userTaskRepo.existsById(taskId)) {
+            throw new RuntimeException("Task not found");
+        }
+        userTaskRepo.deleteById(taskId);
+    }
+
+
 }

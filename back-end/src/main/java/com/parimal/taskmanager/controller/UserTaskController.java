@@ -48,6 +48,13 @@ public class UserTaskController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 
 }
