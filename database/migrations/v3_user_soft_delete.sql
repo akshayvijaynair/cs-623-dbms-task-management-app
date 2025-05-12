@@ -1,15 +1,9 @@
 BEGIN;
 
--- 1. Add `is_deleted` column
 ALTER TABLE "user".users
     ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
 
--- 2. Optional: Add a partial index to speed up non-deleted lookups
-CREATE INDEX idx_users_not_deleted
-    ON "user".users(id)
-    WHERE is_deleted = FALSE;
-
--- 3. Update existing procedures (delete_user becomes a soft delete)
+-- Update existing procedures (delete_user becomes a soft delete)
 DROP FUNCTION IF EXISTS delete_user(INT);
 
 CREATE OR REPLACE FUNCTION delete_user(p_id INT)
@@ -27,8 +21,7 @@ END IF;
 END;
 $$ LANGUAGE plpgsql;
 
--- 4. Update create_user and edit_user to prevent changes to soft-deleted users
-
+-- Update create_user and edit_user to prevent changes to soft-deleted users
 DROP FUNCTION IF EXISTS edit_user(INT, TEXT, TEXT);
 
 CREATE OR REPLACE FUNCTION edit_user(
@@ -40,7 +33,8 @@ RETURNS "user".users
 AS $$
 DECLARE
 existing_user "user".users;
-BEGIN
+
+BEGIN;
 SELECT * INTO existing_user
 FROM "user".users
 WHERE id = p_id AND is_deleted = FALSE;
@@ -60,5 +54,4 @@ WHERE id = p_id
 RETURN existing_user;
 END;
 $$ LANGUAGE plpgsql;
-
 COMMIT;

@@ -1,9 +1,9 @@
 
 -- getUsers
-SELECT * FROM get_users();
+SELECT * FROM "user".active_users_view;
 
 -- createUser
-SELECT * FROM create_user(p_name := 'Alice Smith', p_email := 'alice.smith@example.com');
+SELECT * FROM create_user(p_name := 'parimal_borkar', p_email := 'pborkar@example.com');
 
 -- Edit user with ID 5, change only the name
 SELECT * FROM edit_user(p_id := 5, p_name := 'New Name');

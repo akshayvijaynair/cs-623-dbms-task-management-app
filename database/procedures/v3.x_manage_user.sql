@@ -40,8 +40,14 @@ END IF;
     -- Update with coalesce to keep existing values
 UPDATE "user".users
 SET
-    name = COALESCE(p_name, existing_user.name),
-    email = COALESCE(p_email, existing_user.email),
+    name = CASE
+               WHEN p_name IS NOT NULL THEN p_name
+               ELSE existing_user.name
+        END,
+    email = CASE
+                WHEN p_email IS NOT NULL THEN p_email
+                ELSE existing_user.email
+        END,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = p_id
     RETURNING * INTO existing_user;

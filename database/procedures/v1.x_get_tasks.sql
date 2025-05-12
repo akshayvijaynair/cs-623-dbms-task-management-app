@@ -1,13 +1,5 @@
-CREATE OR REPLACE FUNCTION get_tasks()
-RETURNS SETOF task.user_tasks
-AS $$
-BEGIN
-RETURN QUERY
-SELECT * FROM task.user_tasks ORDER BY id;
-END;
-$$ LANGUAGE plpgsql;
 
--- 3. getTasksAssignedToUser
+-- Tasks Assigned To User
 CREATE OR REPLACE FUNCTION get_tasks_assigned_to_user(p_user_id INT)
 RETURNS SETOF task.user_tasks
 AS $$
@@ -19,7 +11,7 @@ ORDER BY due_date;
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- get all details of a task
 CREATE OR REPLACE FUNCTION get_task_with_comments_and_history(p_task_id INT)
     RETURNS TABLE (
                       task_id INT,
