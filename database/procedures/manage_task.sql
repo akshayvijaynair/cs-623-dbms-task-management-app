@@ -61,3 +61,24 @@ VALUES (p_user_id, p_task_id, p_change)
 RETURN new_history;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Drop if already exists
+DROP FUNCTION IF EXISTS delete_task(INT);
+
+-- Stored procedure to delete a task by ID (cascades to comments and history)
+CREATE OR REPLACE FUNCTION delete_task(p_task_id INT)
+    RETURNS VOID
+AS $$
+BEGIN
+    -- First, verify the task exists
+    IF NOT EXISTS (
+        SELECT 1 FROM task.user_tasks WHERE id = p_task_id
+    ) THEN
+        RAISE EXCEPTION 'Task with ID % does not exist', p_task_id;
+    END IF;
+
+    -- Delete the task; comments and histories are automatically deleted via ON DELETE CASCADE
+    DELETE FROM task.user_tasks
+    WHERE id = p_task_id;
+END;
+$$ LANGUAGE plpgsql;

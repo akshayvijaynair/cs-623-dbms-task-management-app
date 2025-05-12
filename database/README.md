@@ -80,3 +80,10 @@ Steps to Run the Script in pgAdmin:
    - Refresh your Tables list by right-clicking Tables > Refresh to verify new tables were created.
    - Optionally: Go to Views to see locked_tasks_view.
    - You can also expand Functions and Triggers to verify that set_updated_at and all triggers are present.
+
+
+## Steps for database
+
+1. execute setup.sql
+2. execute test-data.sql
+3. 
