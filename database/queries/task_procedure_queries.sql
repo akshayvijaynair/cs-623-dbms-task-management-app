@@ -1,10 +1,10 @@
 -- get tasks
 SELECT * FROM task.all_tasks_view;
 
--- 3. getTasksAssignedToUser
+-- getTasksAssignedToUser
 SELECT * FROM get_tasks_assigned_to_user(p_user_id := 10);
 
--- 5. createTask
+-- createTask
 SELECT * FROM create_task(
         101,                                -- INT
         'Finish documentation'::TEXT,       -- TEXT
@@ -17,21 +17,21 @@ SELECT * FROM create_task(
         (CURRENT_TIMESTAMP + INTERVAL '2 days')::TIMESTAMP -- TIMESTAMP
               );
 
--- 6. createTaskComment
+-- createTaskComment
 SELECT * FROM create_task_comment(
         p_note_id := 1,
         p_user_id := 3,
         p_comment := 'Please review the docs'
               );
 
--- 7. createTaskHistory
+-- createTaskHistory
 SELECT * FROM create_task_history(
         p_user_id := 99,
         p_task_id := 1,
         p_change := 'Changed status from TODO to WIP'
               );
 
--- 8. getTaskWithCommentsAndHistory
+-- getTaskWithCommentsAndHistory
 SELECT * FROM get_task_with_comments_and_history(p_task_id := 1);
 
 UPDATE task.user_tasks
