@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserTaskService {
@@ -27,6 +28,10 @@ public class UserTaskService {
 
     public List<UserTask> getAllTasks() {
         return userTaskRepo.findAll();
+    }
+
+    public Optional<UserTask> getTask(Long taskId) {
+        return  userTaskRepo.findById(taskId);
     }
 
     public UserTask createTask(UserTask task, Long assigneeId, TaskPriority priority, TaskStatus status, TaskType type) {
