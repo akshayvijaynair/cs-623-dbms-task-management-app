@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_tasks")
+@Table(name = "\"user_tasks\"", schema = "\"task\"")
 public class UserTask {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,17 +26,17 @@ public class UserTask {
     @JoinColumn(name = "locked_by_id")
     private User lockedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "type")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TaskType type;
 
-    @ManyToOne
-    @JoinColumn(name = "status")
-    private TaskStatus status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskStatus status = TaskStatus.OPEN;
 
-    @ManyToOne
-    @JoinColumn(name = "priority")
-    private TaskPriority priority;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskPriority priority = TaskPriority.MEDIUM;
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;
@@ -46,38 +47,15 @@ public class UserTask {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Getters and setters 👇
-
-    public Long getId() {
-        return id;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
     public User getAssignee() {
@@ -88,20 +66,20 @@ public class UserTask {
         this.assignee = assignee;
     }
 
-    public User getLockedBy() {
-        return lockedBy;
-    }
-
-    public void setLockedBy(User lockedBy) {
-        this.lockedBy = lockedBy;
-    }
-
     public TaskType getType() {
         return type;
     }
 
     public void setType(TaskType type) {
         this.type = type;
+    }
+
+    public User getLockedBy() {
+        return lockedBy;
+    }
+
+    public void setLockedBy(User lockedBy) {
+        this.lockedBy = lockedBy;
     }
 
     public TaskStatus getStatus() {
@@ -118,6 +96,30 @@ public class UserTask {
 
     public void setPriority(TaskPriority priority) {
         this.priority = priority;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public LocalDateTime getDueDate() {

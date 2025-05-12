@@ -3,14 +3,15 @@ package com.parimal.taskmanager.model;
 import java.time.LocalDateTime;
 
 public class TaskRequest {
+
     private String title;
     private String value;
     private LocalDateTime dueDate;
 
     private Long assigneeId;
-    private Long priorityId;
-    private Long statusId;
-    private Long typeId;
+    private TaskPriority priority;
+    private TaskStatus status;
+    private TaskType type;
 
     // Getters and Setters
     public String getTitle() { return title; }
@@ -25,12 +26,12 @@ public class TaskRequest {
     public Long getAssigneeId() { return assigneeId; }
     public void setAssigneeId(Long assigneeId) { this.assigneeId = assigneeId; }
 
-    public Long getPriorityId() { return priorityId; }
-    public void setPriorityId(Long priorityId) { this.priorityId = priorityId; }
+    public TaskPriority getPriority() { return priority; }
+    public void setPriority(TaskPriority priority) { this.priority = priority; }
 
-    public Long getStatusId() { return statusId; }
-    public void setStatusId(Long statusId) { this.statusId = statusId; }
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus status) { this.status = status; }
 
-    public Long getTypeId() { return typeId; }
-    public void setTypeId(Long typeId) { this.typeId = typeId; }
+    public TaskType getType() { return type; }
+    public void setType(TaskType type) { this.type = type; }
 }

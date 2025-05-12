@@ -9,7 +9,7 @@ public class UpdateTaskRequest {
     private String value;
     private LocalDateTime dueDate;
     private Long assigneeId;
-    private Long priorityId;
-    private Long statusId;
-    private Long typeId;
+    private String status;
+    private String priority;
+    private String type;
 }

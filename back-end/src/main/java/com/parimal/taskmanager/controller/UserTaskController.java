@@ -1,16 +1,12 @@
 package com.parimal.taskmanager.controller;
 
 import com.parimal.taskmanager.DTO.UpdateTaskRequest;
-import com.parimal.taskmanager.model.TaskHistory;
-import com.parimal.taskmanager.model.TaskRequest;
-import com.parimal.taskmanager.model.UserTask;
+import com.parimal.taskmanager.model.*;
 import com.parimal.taskmanager.repository.TaskHistoryRepository;
 import com.parimal.taskmanager.service.UserTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.parimal.taskmanager.DTO.UpdateTaskRequest;
-
 
 import java.util.List;
 
@@ -28,11 +24,20 @@ public class UserTaskController {
         task.setValue(request.getValue());
         task.setDueDate(request.getDueDate());
 
-        UserTask created = taskService.createTask(task, request.getAssigneeId(),
-                request.getPriorityId(),
-                request.getStatusId(),
-                request.getTypeId());
+        UserTask created = taskService.createTask(
+                task,
+                request.getAssigneeId(),
+                request.getPriority(),
+                request.getStatus(),
+                request.getType()
+        );
         return ResponseEntity.ok(created);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserTask>> getAllTasks() {
+        List<UserTask> tasks = taskService.getAllTasks();
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/users/{userId}/tasks")
@@ -59,13 +64,24 @@ public class UserTaskController {
     @GetMapping("/users/{userId}/tasks/filter")
     public ResponseEntity<List<UserTask>> filterTasks(
             @PathVariable Long userId,
-            @RequestParam(required = false) Long statusId,
-            @RequestParam(required = false) Long priorityId,
-            @RequestParam(required = false) Long typeId,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String type,
             @RequestParam(defaultValue = "dueDate") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        List<UserTask> tasks = taskService.filterAndSortTasks(userId, statusId, priorityId, typeId, sortBy, sortDir);
+        TaskStatus statusEnum = (status != null) ? TaskStatus.valueOf(status.toUpperCase()) : null;
+        TaskPriority priorityEnum = (priority != null) ? TaskPriority.valueOf(priority.toUpperCase()) : null;
+        TaskType typeEnum = (type != null) ? TaskType.valueOf(type.toUpperCase()) : null;
+
+        List<UserTask> tasks = taskService.filterAndSortTasks(
+                userId,
+                statusEnum,
+                priorityEnum,
+                typeEnum,
+                sortBy,
+                sortDir
+        );
         return ResponseEntity.ok(tasks);
     }
 
@@ -82,5 +98,4 @@ public class UserTaskController {
             return ResponseEntity.ok(history);
         }
     }
-
 }

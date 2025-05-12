@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "\"user\"") // <-- Quotes the table name to avoid SQL syntax errors
+@Table(name = "\"users\"", schema = "\"user\"")
 public class User {
 
     @Id

@@ -2,10 +2,12 @@ package com.parimal.taskmanager.controller;
 
 import com.parimal.taskmanager.model.User;
 import com.parimal.taskmanager.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Users")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
