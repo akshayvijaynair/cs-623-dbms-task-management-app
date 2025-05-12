@@ -49,7 +49,7 @@ public class UserTaskController {
         return ResponseEntity.ok(tasks);
     }
 
-    @GetMapping("/users/{userId}/tasks")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<UserTask>> getUserTasks(@PathVariable Long userId) {
         List<UserTask> tasks = taskService.getTasksByUserId(userId);
         return ResponseEntity.ok(tasks);
@@ -70,7 +70,7 @@ public class UserTaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/users/{userId}/tasks/filter")
+    @GetMapping("/users/{userId}/filter")
     public ResponseEntity<List<UserTask>> filterTasks(
             @PathVariable Long userId,
             @RequestParam(required = false) String status,
@@ -92,19 +92,5 @@ public class UserTaskController {
                 sortDir
         );
         return ResponseEntity.ok(tasks);
-    }
-
-    @RestController
-    @RequestMapping("/api/history")
-    public class TaskHistoryController {
-
-        @Autowired
-        private TaskHistoryRepository historyRepo;
-
-        @GetMapping("/task/{taskId}")
-        public ResponseEntity<List<TaskHistory>> getTaskHistory(@PathVariable Long taskId) {
-            List<TaskHistory> history = historyRepo.findByTaskId(taskId);
-            return ResponseEntity.ok(history);
-        }
     }
 }

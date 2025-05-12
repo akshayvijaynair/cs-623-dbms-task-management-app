@@ -15,7 +15,9 @@ import java.util.List;
 
 @Repository
 public interface UserTaskRepository extends JpaRepository<UserTask, Long> {
-    List<UserTask> findByAssigneeId(Long userId);
+    @Query("SELECT t FROM UserTask t WHERE t.assignee.id = :userId")
+    List<UserTask> findByAssigneeId(@Param("userId") Long userId);
+
     @Query("""
     SELECT t FROM UserTask t
     WHERE (:userId IS NULL OR t.user.id = :userId)
